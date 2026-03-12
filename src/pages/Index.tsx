@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DocSidebar from "@/components/DocSidebar";
+import SectionNav from "@/components/SectionNav";
 import WelcomeSection from "@/components/sections/WelcomeSection";
 import ColorSection from "@/components/sections/ColorSection";
 import TypographySection from "@/components/sections/TypographySection";
@@ -161,12 +162,18 @@ const sectionContent: Record<string, React.ReactNode> = {
 const Index = () => {
   const [activeSection, setActiveSection] = useState("welcome");
 
+  const handleNavigate = (section: string) => {
+    setActiveSection(section);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
-      <DocSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+      <DocSidebar activeSection={activeSection} onSectionChange={handleNavigate} />
       <main className="flex-1 min-w-0">
         <div className="max-w-3xl mx-auto px-6 lg:px-10 py-12 lg:py-16">
           {sectionContent[activeSection] || <WelcomeSection />}
+          <SectionNav currentSection={activeSection} onNavigate={handleNavigate} />
         </div>
       </main>
     </div>
