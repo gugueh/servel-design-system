@@ -1,23 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const allSections = [
-  { id: "welcome", label: "Welcome" },
-  { id: "faqs", label: "FAQs" },
-  { id: "tokens", label: "Design Tokens" },
-  { id: "color", label: "Color" },
-  { id: "typography", label: "Typography" },
-  { id: "spacing", label: "Dimensions" },
-  { id: "radius", label: "Corner Radius" },
-  { id: "elevation", label: "Elevation" },
-  { id: "icons", label: "Icons" },
-  { id: "motion", label: "Motion" },
-  { id: "voice", label: "Voice & Tone" },
-  { id: "writing", label: "Writing" },
-  { id: "a11y", label: "Accessibility" },
-  { id: "components", label: "Components" },
-  { id: "resources", label: "Resources" },
-  { id: "changelog", label: "Changelog" },
-];
+import { allDocSections } from "@/lib/doc-sections";
 
 interface SectionNavProps {
   currentSection: string;
@@ -25,9 +7,9 @@ interface SectionNavProps {
 }
 
 const SectionNav = ({ currentSection, onNavigate }: SectionNavProps) => {
-  const currentIndex = allSections.findIndex((s) => s.id === currentSection);
-  const prev = currentIndex > 0 ? allSections[currentIndex - 1] : null;
-  const next = currentIndex < allSections.length - 1 ? allSections[currentIndex + 1] : null;
+  const currentIndex = allDocSections.findIndex((s) => s.id === currentSection);
+  const prev = currentIndex > 0 ? allDocSections[currentIndex - 1] : null;
+  const next = currentIndex < allDocSections.length - 1 ? allDocSections[currentIndex + 1] : null;
 
   return (
     <div className="mt-16 pt-8 border-t border-border">

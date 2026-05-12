@@ -1,17 +1,26 @@
 import { motion } from "framer-motion";
-import { Home, User, Star, Heart, Bell } from "lucide-react";
+import { Home, User, Heart, Bell } from "lucide-react";
 
 const spacingScale = [
-  { token: "--space-1", val: "4px", px: 4, use: "Gap entre icono y label" },
-  { token: "--space-2", val: "8px", px: 8, use: "Padding interno de chips" },
-  { token: "--space-3", val: "12px", px: 12, use: "Gap entre elementos en listas" },
-  { token: "--space-4", val: "16px", px: 16, use: "Padding horizontal estándar" },
-  { token: "--space-5", val: "20px", px: 20, use: "Padding de cards" },
-  { token: "--space-6", val: "24px", px: 24, use: "Separación entre secciones" },
-  { token: "--space-8", val: "32px", px: 32, use: "Padding vertical de pantallas" },
-  { token: "--space-10", val: "40px", px: 40, use: "Separación entre bloques" },
-  { token: "--space-12", val: "48px", px: 48, use: "Espacios hero" },
-  { token: "--space-16", val: "64px", px: 64, use: "Espacios estructurales" },
+  { name: "2XS", token: "--space-2xs", val: "2px", px: 2, use: "Separación mínima / micro-ajustes" },
+  { name: "XS", token: "--space-xs", val: "4px", px: 4, use: "Separación compacta (chips, iconos, listas)" },
+  { name: "SM", token: "--space-sm", val: "8px", px: 8, use: "Gap estándar pequeño (icono + texto)" },
+  { name: "MD", token: "--space-md", val: "12px", px: 12, use: "Separación entre elementos relacionados" },
+  { name: "LG", token: "--space-lg", val: "16px", px: 16, use: "Padding base y márgenes frecuentes" },
+  { name: "XL", token: "--space-xl", val: "20px", px: 20, use: "Separación entre bloques dentro de una sección" },
+  { name: "2XL", token: "--space-2xl", val: "24px", px: 24, use: "Separación entre secciones o grupos" },
+  { name: "3XL", token: "--space-3xl", val: "32px", px: 32, use: "Padding vertical de pantallas" },
+  { name: "4XL", token: "--space-4xl", val: "40px", px: 40, use: "Separación entre bloques grandes" },
+  { name: "5XL", token: "--space-5xl", val: "48px", px: 48, use: "Hero spacing / respiración amplia" },
+  { name: "6XL", token: "--space-6xl", val: "64px", px: 64, use: "Espaciado estructural" },
+];
+
+const sectionSpacingScale = [
+  { name: "section-sm", token: "--space-section-sm", val: "80px", px: 80, use: "Separación vertical entre secciones (compacta)" },
+  { name: "section-md", token: "--space-section-md", val: "96px", px: 96, use: "Separación vertical entre secciones (estándar)" },
+  { name: "section-lg", token: "--space-section-lg", val: "120px", px: 120, use: "Separación vertical entre secciones (amplia)" },
+  { name: "section-xl", token: "--space-section-xl", val: "160px", px: 160, use: "Separación vertical entre secciones (hero)" },
+  { name: "section-2xl", token: "--space-section-2xl", val: "192px", px: 192, use: "Separación vertical entre secciones (máxima)" },
 ];
 
 const coreSizes = [
@@ -20,16 +29,6 @@ const coreSizes = [
   { size: 36, label: "36" },
   { size: 24, label: "24" },
   { size: 16, label: "16" },
-];
-
-const radiusScale = [
-  { token: "--radius-none", val: "0px", use: "Divisores, full-width" },
-  { token: "--radius-xs", val: "4px", use: "Tags, badges, chips" },
-  { token: "--radius-sm", val: "6px", use: "Botones small, inputs" },
-  { token: "--radius-md", val: "10px", use: "Cards, botones medium" },
-  { token: "--radius-lg", val: "16px", use: "Bottom sheets, modales" },
-  { token: "--radius-xl", val: "24px", use: "Sheets full-screen" },
-  { token: "--radius-full", val: "9999px", use: "Pills, avatares, FAB" },
 ];
 
 const gridSpecs = {
@@ -57,7 +56,7 @@ const SpacingSection = () => (
       <p className="text-xs font-medium tracking-widest uppercase text-primary mb-3">Styles</p>
       <h1 className="font-display-xl text-3xl md:text-4xl mb-3">Dimensions</h1>
       <p className="text-muted-foreground leading-relaxed max-w-xl">
-        Todos los valores de espacio son múltiplos de 4px. No usar valores arbitrarios fuera de la escala definida.
+        Usamos una escala de spacing definida. Evitar valores arbitrarios fuera de la escala.
       </p>
     </div>
 
@@ -116,12 +115,46 @@ const SpacingSection = () => (
     <div className="mb-14">
       <h2 className="font-display text-lg mb-2">Spacing scale</h2>
       <p className="text-sm text-muted-foreground mb-6">
-        Escala basada en múltiplos de 4px para consistencia visual.
+        Escala para consistencia visual y control de ritmo en layouts.
       </p>
       <div className="space-y-1.5">
         {spacingScale.map((s) => (
-          <div key={s.token} className="flex items-center gap-4 group py-1.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors">
-            <span className="font-mono-code text-xs text-muted-foreground w-24 shrink-0">{s.token}</span>
+          <div
+            key={s.name}
+            className="flex items-center gap-4 group py-1.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+          >
+            <div className="w-36 shrink-0">
+              <div className="font-mono-code text-xs text-foreground font-medium">{s.name}</div>
+              <div className="font-mono-code text-[11px] text-muted-foreground">{s.token}</div>
+            </div>
+            <div className="flex items-center gap-3 flex-1">
+              <div
+                className="h-5 bg-primary/20 rounded-xs transition-all duration-150 group-hover:bg-primary/40"
+                style={{ width: s.val }}
+              />
+              <span className="text-xs font-mono-code text-foreground font-medium">{s.val}</span>
+              <span className="text-xs text-muted-foreground hidden sm:block">— {s.use}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div className="mb-14">
+      <h2 className="font-display text-lg mb-2">Section spacing</h2>
+      <p className="text-sm text-muted-foreground mb-6">
+        Valores de separación vertical para definir el ritmo entre secciones completas.
+      </p>
+      <div className="space-y-1.5">
+        {sectionSpacingScale.map((s) => (
+          <div
+            key={s.name}
+            className="flex items-center gap-4 group py-1.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+          >
+            <div className="w-36 shrink-0">
+              <div className="font-mono-code text-xs text-foreground font-medium">{s.name}</div>
+              <div className="font-mono-code text-[11px] text-muted-foreground">{s.token}</div>
+            </div>
             <div className="flex items-center gap-3 flex-1">
               <div
                 className="h-5 bg-primary/20 rounded-xs transition-all duration-150 group-hover:bg-primary/40"
@@ -285,26 +318,6 @@ const SpacingSection = () => (
             ))}
           </div>
         </div>
-      </div>
-    </div>
-
-    {/* Corner Radius */}
-    <div className="mb-14">
-      <h2 className="font-display text-lg mb-2">Corner Radius</h2>
-      <p className="text-sm text-muted-foreground mb-6">
-        Escala de radios para mantener consistencia en bordes redondeados.
-      </p>
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
-        {radiusScale.map((r) => (
-          <div key={r.token} className="text-center">
-            <div
-              className="w-16 h-16 mx-auto mb-2 border-2 border-primary/30 bg-primary/5"
-              style={{ borderRadius: r.val }}
-            />
-            <p className="text-xs font-mono-code font-medium">{r.val}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{r.use}</p>
-          </div>
-        ))}
       </div>
     </div>
 

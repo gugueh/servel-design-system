@@ -9,19 +9,20 @@ const WelcomeSection = () => (
     <div className="mb-12">
       <p className="text-xs font-medium tracking-widest uppercase text-primary mb-3">Getting Started</p>
       <h1 className="font-display-xl text-4xl md:text-5xl leading-[1.1] mb-4">
-        Build better,<br />faster.
+        Servel<br />Design System
       </h1>
       <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-        El toolkit definitivo para construir experiencias móviles consistentes, accesibles y escalables en iOS y Android.
+        Fundaciones, componentes y patrones para construir la experiencia Servel: conectar profesionales (prestadores) con
+        clientes de forma simple, segura y user friendly.
       </p>
     </div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
       {[
-        { title: "Claridad ante todo", desc: "Cada elemento comunica su función sin fricción." },
-        { title: "Consistencia sistemática", desc: "Los mismos tokens, los mismos patrones, el mismo lenguaje." },
-        { title: "Inclusión de base", desc: "La accesibilidad no es un add-on; es parte de cada decisión." },
-        { title: "Mobile-first real", desc: "Diseñamos para una mano, luz solar e interrupciones." },
+        { title: "User friendly", desc: "Reducimos fricción: menos pasos, más claridad y confianza." },
+        { title: "Consistencia", desc: "Tokens y reglas compartidas para producto, diseño y código." },
+        { title: "Accesibilidad", desc: "Contraste, foco, motion y contenido listos para escalar." },
+        { title: "Evolutivo", desc: "Componentes versionados y documentados para iterar sin romper." },
       ].map((p, i) => (
         <motion.div
           key={i}
@@ -37,9 +38,9 @@ const WelcomeSection = () => (
     </div>
 
     <div className="space-y-6">
-      <h2 className="font-display text-lg">Plataformas soportadas</h2>
+      <h2 className="font-display text-lg">Plataformas</h2>
       <div className="flex flex-wrap gap-2">
-        {["iOS — UIKit", "iOS — SwiftUI", "Android — Compose", "Android — XML", "React Native"].map(p => (
+        {["Web — React", "iOS", "Android", "Design — Figma"].map((p) => (
           <span key={p} className="px-3 py-1.5 text-xs font-medium bg-secondary text-secondary-foreground rounded-full">
             {p}
           </span>

@@ -1,57 +1,53 @@
-**Use your preferred IDE**
+# Servel Design System
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Sitio de documentación / playground del Design System de Servel, construido con React + TypeScript + Tailwind (shadcn/ui). Sirve como referencia visual y técnica para tokens, tipografías, espaciados, colores y componentes.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Qué contiene
 
-Follow these steps:
+- Documentación en secciones (bienvenida, tokens, tipografía, colores, spacing, etc.).
+- Componentes UI basados en shadcn/ui (en `src/components/ui`).
+- Tipografía Switzer y archivos asociados (en `src/Switzer_Complete`).
+- Ilustraciones e íconos usados por el sitio (en `src/Ilustraciones` y `src/Icono.svg`).
+- Configuración de Tailwind, Vite y tooling (ESLint, Vitest, Playwright).
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Requisitos
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- Node.js (recomendado 18+)
+- npm
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Uso en local
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone <URL_DEL_REPO>
+cd servel-design-system
+
+npm ci
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Luego abre:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- http://localhost:8080/
 
-**Use GitHub Codespaces**
+## Scripts útiles
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- `npm run dev`: levanta el servidor de desarrollo.
+- `npm run build`: compila para producción.
+- `npm run preview`: previsualiza el build.
+- `npm run lint`: corre ESLint.
+- `npm run test`: corre tests (Vitest).
 
-## What technologies are used for this project?
+## Estructura (alto nivel)
 
-This project is built with:
+- `src/pages`: páginas (home, not-found).
+- `src/components/sections`: secciones del sitio de documentación.
+- `src/components/ui`: componentes reutilizables (shadcn/ui).
+- `src/lib/doc-sections.ts`: configuración/registro de secciones.
+- `tailwind.config.ts`: tema y configuración de Tailwind.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Licencias y terceros
 
-## How can I deploy this project?
+Este repositorio incluye assets de terceros (por ejemplo tipografías). Revisa:
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- `src/Switzer_Complete/License/FFL.txt`
+- `src/LICENCES-THIRD-PARTY.txt`

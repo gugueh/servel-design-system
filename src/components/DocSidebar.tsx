@@ -1,76 +1,26 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  BookOpen, Palette, Type, Grid3X3, Box, Layers, 
-  Zap, PenTool, Move, FileText, Users, Component,
-  LayoutGrid, FolderOpen, ChevronRight, Menu, X
+  ChevronRight,
+  X
 } from "lucide-react";
+import { docSectionGroups } from "@/lib/doc-sections";
 
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
 }
 
-const sections = [
-  {
-    title: "Getting Started",
-    items: [
-      { id: "welcome", label: "Welcome", icon: BookOpen },
-      { id: "faqs", label: "FAQs", icon: FileText },
-    ],
-  },
-  {
-    title: "Styles",
-    items: [
-      { id: "tokens", label: "Design Tokens", icon: Layers },
-      { id: "color", label: "Color", icon: Palette },
-      { id: "typography", label: "Typography", icon: Type },
-      { id: "spacing", label: "Dimensions", icon: Grid3X3 },
-      { id: "radius", label: "Corner Radius", icon: Box },
-      { id: "elevation", label: "Elevation", icon: Layers },
-    ],
-  },
-  {
-    title: "Expression",
-    items: [
-      { id: "icons", label: "Icons", icon: PenTool },
-      { id: "motion", label: "Motion", icon: Move },
-    ],
-  },
-  {
-    title: "Content Design",
-    items: [
-      { id: "voice", label: "Voice & Tone", icon: FileText },
-      { id: "writing", label: "Writing", icon: PenTool },
-    ],
-  },
-  {
-    title: "Product Inclusion",
-    items: [
-      { id: "a11y", label: "Accessibility", icon: Users },
-    ],
-  },
-  {
-    title: "Components",
-    items: [
-      { id: "components", label: "Overview", icon: Component },
-    ],
-  },
-  {
-    title: "Resources",
-    items: [
-      { id: "resources", label: "Resources", icon: FolderOpen },
-      { id: "changelog", label: "Changelog", icon: LayoutGrid },
-    ],
-  },
-];
-
-const DocSidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+const DocSidebar = ({ activeSection, onSectionChange, mobileOpen: mobileOpenProp, onMobileOpenChange }: SidebarProps) => {
+  const [mobileOpenState, setMobileOpenState] = useState(false);
+  const mobileOpen = mobileOpenProp ?? mobileOpenState;
+  const setMobileOpen = onMobileOpenChange ?? setMobileOpenState;
 
   const navContent = (
     <nav className="flex flex-col gap-1 py-4">
-      {sections.map((group) => (
+      {docSectionGroups.map((group) => (
         <div key={group.title} className="mb-2">
           <p className="px-4 py-1.5 text-[11px] font-medium tracking-widest uppercase text-muted-foreground/60">
             {group.title}
@@ -106,14 +56,6 @@ const DocSidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-card shadow-elevation-1"
-      >
-        <Menu size={20} />
-      </button>
-
       {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
@@ -133,7 +75,7 @@ const DocSidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
               className="fixed left-0 top-0 bottom-0 w-[280px] bg-card z-50 lg:hidden overflow-y-auto border-r border-border"
             >
               <div className="flex items-center justify-between px-4 pt-4">
-                <span className="font-display text-sm">Design System</span>
+                <span className="font-display text-sm">Servel Design System</span>
                 <button onClick={() => setMobileOpen(false)} className="p-1">
                   <X size={18} />
                 </button>
@@ -147,8 +89,8 @@ const DocSidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-[260px] min-w-[260px] border-r border-border bg-card h-screen sticky top-0 overflow-y-auto">
         <div className="px-5 pt-6 pb-2">
-          <h1 className="font-display text-base tracking-tight">Design System</h1>
-          <p className="text-[11px] text-muted-foreground mt-0.5">v2.4.0 · Mobile</p>
+          <h1 className="font-display text-base tracking-tight">Servel Design System</h1>
+          <p className="text-[11px] text-muted-foreground mt-0.5">v1.0.0</p>
         </div>
         {navContent}
       </aside>

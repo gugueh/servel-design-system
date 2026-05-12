@@ -1,0 +1,38 @@
+============================================================
+LICENCIAS DE TERCEROS (OPEN SOURCE LIBRARIES)
+============================================================
+
+Este software utiliza componentes de terceros bajo las siguientes 
+licencias:
+
+------------------------------------------------------------
+1. ICONPARK (BYTEDANCE)
+------------------------------------------------------------
+Recurso: IconPark System Icons
+Copyright (c) 2023-2026 ByteDance Inc.
+
+Licencia: Apache License, Version 2.0
+URL: https://www.apache.org/licenses/LICENSE-2.0
+
+Se concede permiso, de forma gratuita, a cualquier persona que 
+obtenga una copia de este software y de los archivos de 
+iconografía asociados para utilizar, copiar, modificar y 
+distribuir los mismos, sujeto a las condiciones de la 
+Licencia Apache 2.0.
+
+------------------------------------------------------------
+2. SWITZER FONT (INDIAN TYPE FOUNDRY)
+------------------------------------------------------------
+Recurso: Switzer Font Family
+Copyright (c) 2021-2026 Indian Type Foundry (ITF).
+
+Licencia: ITF Free Font License (Fontshare)
+URL: https://www.fontshare.com/licenses/itf-ffl
+
+Esta fuente es gratuita para uso personal y comercial. 
+No se permite la venta de los archivos de la fuente de 
+forma independiente ni su modificación.
+
+============================================================
+Desarrollado por Servel.
+============================================================
