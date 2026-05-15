@@ -22,6 +22,10 @@ import licencesThirdPartyUrl from "@/LICENCES-THIRD-PARTY.txt?url";
 
 const illustrationModules = import.meta.glob("../Ilustraciones/*.svg", { eager: true }) as Record<string, { default: string }>;
 const logoModules = import.meta.glob("../Logos/*.{svg,png}", { eager: true }) as Record<string, { default: string }>;
+const iconModules = import.meta.glob("../Icons/*.svg", { eager: true }) as Record<string, { default: string }>;
+
+const PNG_EXPORT_MAX_DIMENSION = 2048;
+const PNG_EXPORT_PIXEL_RATIO = 3;
 
 const toTitleCase = (value: string) =>
   value
@@ -42,6 +46,29 @@ const illustrations = Object.entries(illustrationModules)
       title,
       url: mod.default,
       tag: "Ilustracion SVG",
+    };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title));
+
+type IconItem = {
+  fileName: string;
+  baseName: string;
+  title: string;
+  url: string;
+  tag: string;
+};
+
+const icons = Object.entries(iconModules)
+  .map(([path, mod]) => {
+    const fileName = path.split("/").pop() ?? "icon.svg";
+    const baseName = fileName.replace(/\.svg$/i, "");
+
+    return {
+      fileName,
+      baseName,
+      title: toTitleCase(baseName),
+      url: mod.default,
+      tag: "Icono SVG",
     };
   })
   .sort((a, b) => a.title.localeCompare(b.title));
@@ -103,6 +130,54 @@ const fetchSvgText = async (url: string) => {
   return response.text();
 };
 
+const parseSvgDimensions = (svgText: string) => {
+  const svgTagMatch = svgText.match(/<svg\b[^>]*>/i);
+  if (!svgTagMatch) {
+    return null;
+  }
+
+  const svgTag = svgTagMatch[0];
+  const widthMatch = svgTag.match(/\bwidth\s*=\s*["']([^"']+)["']/i);
+  const heightMatch = svgTag.match(/\bheight\s*=\s*["']([^"']+)["']/i);
+
+  const parseLength = (raw: string) => {
+    const cleaned = raw.trim();
+    if (!cleaned || cleaned.endsWith("%")) {
+      return null;
+    }
+    const numberMatch = cleaned.match(/-?\d+(\.\d+)?/);
+    if (!numberMatch) {
+      return null;
+    }
+    const value = Number.parseFloat(numberMatch[0]);
+    return Number.isFinite(value) && value > 0 ? value : null;
+  };
+
+  const width = widthMatch ? parseLength(widthMatch[1]) : null;
+  const height = heightMatch ? parseLength(heightMatch[1]) : null;
+  if (width && height) {
+    return { width, height };
+  }
+
+  const viewBoxMatch = svgTag.match(/\bviewBox\s*=\s*["']([^"']+)["']/i);
+  if (!viewBoxMatch) {
+    return null;
+  }
+
+  const parts = viewBoxMatch[1].trim().split(/[,\s]+/).map((value) => Number.parseFloat(value));
+  if (parts.length !== 4) {
+    return null;
+  }
+
+  const viewBoxWidth = parts[2];
+  const viewBoxHeight = parts[3];
+  if (!Number.isFinite(viewBoxWidth) || !Number.isFinite(viewBoxHeight) || viewBoxWidth <= 0 || viewBoxHeight <= 0) {
+    return null;
+  }
+
+  return { width: viewBoxWidth, height: viewBoxHeight };
+};
+
 const triggerDownload = (href: string, fileName: string) => {
   const link = document.createElement("a");
   link.href = href;
@@ -114,6 +189,7 @@ const triggerDownload = (href: string, fileName: string) => {
 
 const downloadPngFromSvg = async (svgUrl: string, fileName: string) => {
   const svgText = await fetchSvgText(svgUrl);
+  const svgDimensions = parseSvgDimensions(svgText);
   const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
   const blobUrl = URL.createObjectURL(svgBlob);
 
@@ -121,23 +197,35 @@ const downloadPngFromSvg = async (svgUrl: string, fileName: string) => {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error("No se pudo convertir la ilustracion."));
+      img.onerror = () => reject(new Error("No se pudo convertir el SVG."));
       img.src = blobUrl;
     });
 
-    const width = image.naturalWidth || image.width || 512;
-    const height = image.naturalHeight || image.height || 512;
+    const sourceWidth = svgDimensions?.width ?? image.naturalWidth ?? image.width ?? 512;
+    const sourceHeight = svgDimensions?.height ?? image.naturalHeight ?? image.height ?? 512;
+    const safeSourceWidth = Number.isFinite(sourceWidth) && sourceWidth > 0 ? sourceWidth : 512;
+    const safeSourceHeight = Number.isFinite(sourceHeight) && sourceHeight > 0 ? sourceHeight : 512;
+
+    const maxSourceDimension = Math.max(safeSourceWidth, safeSourceHeight);
+    const scale = maxSourceDimension > 0 ? PNG_EXPORT_MAX_DIMENSION / maxSourceDimension : 1;
+    const outputWidth = Math.max(1, Math.round(safeSourceWidth * scale));
+    const outputHeight = Math.max(1, Math.round(safeSourceHeight * scale));
+
     const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = outputWidth * PNG_EXPORT_PIXEL_RATIO;
+    canvas.height = outputHeight * PNG_EXPORT_PIXEL_RATIO;
 
     const context = canvas.getContext("2d");
     if (!context) {
       throw new Error("No se pudo preparar la descarga PNG.");
     }
 
-    context.clearRect(0, 0, width, height);
-    context.drawImage(image, 0, 0, width, height);
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.setTransform(PNG_EXPORT_PIXEL_RATIO, 0, 0, PNG_EXPORT_PIXEL_RATIO, 0, 0);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(image, 0, 0, outputWidth, outputHeight);
 
     const pngBlob = await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob((blob) => {
@@ -244,10 +332,10 @@ const handleDownloadLogoSvg = async (logo: LogoItem) => {
 
 const handleDownloadLogoPng = async (logo: LogoItem) => {
   try {
-    if (logo.pngUrl) {
-      triggerDownload(logo.pngUrl, `${logo.downloadBaseName}.png`);
-    } else if (logo.svgUrl) {
+    if (logo.svgUrl) {
       await downloadPngFromSvg(logo.svgUrl, logo.downloadBaseName);
+    } else if (logo.pngUrl) {
+      triggerDownload(logo.pngUrl, `${logo.downloadBaseName}.png`);
     } else {
       throw new Error("No hay archivo disponible para descargar.");
     }
@@ -348,6 +436,39 @@ const LogoCard = ({ logo }: { logo: LogoItem }) => (
       <div className="min-w-0">
         <h3 className="truncate text-sm font-semibold text-foreground">{logo.title}</h3>
         <p className="mt-1 text-xs text-muted-foreground">{logo.tag}</p>
+      </div>
+    </div>
+  </div>
+);
+
+const IconCard = ({ icon }: { icon: IconItem }) => (
+  <div className="group rounded-xl border border-border bg-card transition-all duration-200 hover:border-primary/40 hover:shadow-elevation-2">
+    <div className="relative flex min-h-[220px] items-center justify-center rounded-t-xl bg-muted/40 p-6">
+      <img src={icon.url} alt={icon.title} className="h-16 w-16 object-contain" loading="lazy" />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="absolute right-3 top-3 h-9 w-9 rounded-full opacity-90 shadow-sm"
+            aria-label={`Acciones para ${icon.title}`}
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={() => handleDownloadSvg(icon.url, icon.baseName, icon.title)}>
+            <Download className="h-4 w-4" />
+            Download SVG
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+    <div className="flex items-start justify-between gap-4 p-4">
+      <div className="min-w-0">
+        <h3 className="truncate text-sm font-semibold text-foreground">{icon.title}</h3>
+        <p className="mt-1 text-xs text-muted-foreground">{icon.tag}</p>
       </div>
     </div>
   </div>
@@ -519,7 +640,19 @@ const sectionContent: Record<string, React.ReactNode> = {
   ),
   icons: (
     <GenericSection title="Icons" category="Expression">
-      <div className="space-y-6">
+      <div className="space-y-8">
+        <div className="max-w-2xl">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Biblioteca de iconos (SVG) para navegación, acciones y estados. Cada tarjeta permite descargar el asset en formato SVG.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          {icons.map((icon) => (
+            <IconCard key={icon.fileName} icon={icon} />
+          ))}
+        </div>
+
         <div className="p-5 rounded-lg border border-border bg-card">
           <h3 className="font-display text-sm mb-2">Especificaciones</h3>
           <ul className="space-y-1.5 text-sm text-muted-foreground">
