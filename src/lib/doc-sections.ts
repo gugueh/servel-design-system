@@ -40,6 +40,7 @@ export const docSectionGroups = [
     items: [
       { id: "icons", label: "Icons", icon: PenTool },
       { id: "illustrations", label: "Illustrations", icon: Image },
+      { id: "logos", label: "Logos", icon: Image },
       { id: "motion", label: "Motion", icon: Move },
     ],
   },

@@ -21,16 +21,20 @@ import { Copy, Download, MoreHorizontal, Star } from "lucide-react";
 import licencesThirdPartyUrl from "@/LICENCES-THIRD-PARTY.txt?url";
 
 const illustrationModules = import.meta.glob("../Ilustraciones/*.svg", { eager: true }) as Record<string, { default: string }>;
+const logoModules = import.meta.glob("../Logos/*.{svg,png}", { eager: true }) as Record<string, { default: string }>;
+
+const toTitleCase = (value: string) =>
+  value
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 
 const illustrations = Object.entries(illustrationModules)
   .map(([path, mod]) => {
     const fileName = path.split("/").pop() ?? "illustration.svg";
     const baseName = fileName.replace(/\.svg$/i, "");
-    const title = baseName
-      .replace(/[-_]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+    const title = toTitleCase(baseName);
 
     return {
       fileName,
@@ -41,6 +45,55 @@ const illustrations = Object.entries(illustrationModules)
     };
   })
   .sort((a, b) => a.title.localeCompare(b.title));
+
+type LogoItem = {
+  key: string;
+  title: string;
+  tag: string;
+  displayUrl: string;
+  svgUrl?: string;
+  pngUrl?: string;
+  downloadBaseName: string;
+};
+
+const normalizeLogoBaseName = (fileName: string) =>
+  fileName
+    .replace(/\.(svg|png)$/i, "")
+    .replace(/\s+\d+$/i, "")
+    .trim();
+
+const logos = (() => {
+  const grouped = new Map<string, Omit<LogoItem, "displayUrl" | "tag"> & { svgUrl?: string; pngUrl?: string }>();
+
+  Object.entries(logoModules).forEach(([path, mod]) => {
+    const fileName = path.split("/").pop() ?? "logo";
+    const baseKey = normalizeLogoBaseName(fileName);
+    const title = toTitleCase(baseKey);
+    const entry = grouped.get(baseKey) ?? {
+      key: baseKey,
+      title,
+      downloadBaseName: baseKey,
+    };
+
+    if (/\.svg$/i.test(fileName)) {
+      entry.svgUrl = mod.default;
+    }
+
+    if (/\.png$/i.test(fileName)) {
+      entry.pngUrl = mod.default;
+    }
+
+    grouped.set(baseKey, entry);
+  });
+
+  return Array.from(grouped.values())
+    .map((entry) => ({
+      ...entry,
+      tag: "Logo",
+      displayUrl: entry.svgUrl ?? entry.pngUrl ?? "",
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title));
+})();
 
 const fetchSvgText = async (url: string) => {
   const response = await fetch(url);
@@ -104,6 +157,43 @@ const downloadPngFromSvg = async (svgUrl: string, fileName: string) => {
   }
 };
 
+const downloadSvgFromPng = async (pngUrl: string, fileName: string) => {
+  const response = await fetch(pngUrl);
+  if (!response.ok) {
+    throw new Error("No se pudo leer el archivo PNG.");
+  }
+
+  const pngBlob = await response.blob();
+  const blobUrl = URL.createObjectURL(pngBlob);
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("No se pudo convertir el logo."));
+      img.src = blobUrl;
+    });
+
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result ?? ""));
+      reader.onerror = () => reject(new Error("No se pudo preparar la descarga SVG."));
+      reader.readAsDataURL(pngBlob);
+    });
+
+    const width = image.naturalWidth || image.width || 512;
+    const height = image.naturalHeight || image.height || 512;
+    const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image href="${dataUrl}" width="${width}" height="${height}"/></svg>`;
+    const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    triggerDownload(svgUrl, `${fileName}.svg`);
+    URL.revokeObjectURL(svgUrl);
+  } finally {
+    URL.revokeObjectURL(blobUrl);
+  }
+};
+
 const handleCopySvg = async (svgUrl: string, title: string) => {
   const svgText = await fetchSvgText(svgUrl);
   await navigator.clipboard.writeText(svgText);
@@ -127,6 +217,52 @@ const handleDownloadPng = async (svgUrl: string, fileName: string, title: string
     title: "Descarga iniciada",
     description: `Se esta descargando ${title} en formato PNG.`,
   });
+};
+
+const handleDownloadLogoSvg = async (logo: LogoItem) => {
+  try {
+    if (logo.svgUrl) {
+      triggerDownload(logo.svgUrl, `${logo.downloadBaseName}.svg`);
+    } else if (logo.pngUrl) {
+      await downloadSvgFromPng(logo.pngUrl, logo.downloadBaseName);
+    } else {
+      throw new Error("No hay archivo disponible para descargar.");
+    }
+
+    toast({
+      title: "Descarga iniciada",
+      description: `Se esta descargando ${logo.title} en formato SVG.`,
+    });
+  } catch (error) {
+    toast({
+      title: "No se pudo descargar",
+      description: error instanceof Error ? error.message : "Error desconocido.",
+      variant: "destructive",
+    });
+  }
+};
+
+const handleDownloadLogoPng = async (logo: LogoItem) => {
+  try {
+    if (logo.pngUrl) {
+      triggerDownload(logo.pngUrl, `${logo.downloadBaseName}.png`);
+    } else if (logo.svgUrl) {
+      await downloadPngFromSvg(logo.svgUrl, logo.downloadBaseName);
+    } else {
+      throw new Error("No hay archivo disponible para descargar.");
+    }
+
+    toast({
+      title: "Descarga iniciada",
+      description: `Se esta descargando ${logo.title} en formato PNG.`,
+    });
+  } catch (error) {
+    toast({
+      title: "No se pudo descargar",
+      description: error instanceof Error ? error.message : "Error desconocido.",
+      variant: "destructive",
+    });
+  }
 };
 
 const IllustrationCard = ({
@@ -180,6 +316,43 @@ const IllustrationCard = ({
   </div>
 );
 
+const LogoCard = ({ logo }: { logo: LogoItem }) => (
+  <div className="group rounded-xl border border-border bg-card transition-all duration-200 hover:border-primary/40 hover:shadow-elevation-2">
+    <div className="relative flex min-h-[220px] items-center justify-center rounded-t-xl bg-muted/40 p-6">
+      <img src={logo.displayUrl} alt={logo.title} className="max-h-28 w-full object-contain" loading="lazy" />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="absolute right-3 top-3 h-9 w-9 rounded-full opacity-90 shadow-sm"
+            aria-label={`Acciones para ${logo.title}`}
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={() => void handleDownloadLogoSvg(logo)}>
+            <Download className="h-4 w-4" />
+            Download SVG
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => void handleDownloadLogoPng(logo)}>
+            <Download className="h-4 w-4" />
+            Download PNG
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+    <div className="flex items-start justify-between gap-4 p-4">
+      <div className="min-w-0">
+        <h3 className="truncate text-sm font-semibold text-foreground">{logo.title}</h3>
+        <p className="mt-1 text-xs text-muted-foreground">{logo.tag}</p>
+      </div>
+    </div>
+  </div>
+);
+
 const IllustrationsSection = () => (
   <GenericSection title="Illustrations" category="Expression">
     <div className="space-y-8">
@@ -199,6 +372,24 @@ const IllustrationsSection = () => (
             url={illustration.url}
             fileName={illustration.fileName}
           />
+        ))}
+      </div>
+    </div>
+  </GenericSection>
+);
+
+const LogosSection = () => (
+  <GenericSection title="Logos" category="Expression">
+    <div className="space-y-8">
+      <div className="max-w-2xl">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Biblioteca de logos disponibles para producto y comunicaciones. Cada tarjeta permite descargar el asset en formato SVG y PNG.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        {logos.map((logo) => (
+          <LogoCard key={logo.key} logo={logo} />
         ))}
       </div>
     </div>
@@ -386,6 +577,7 @@ const sectionContent: Record<string, React.ReactNode> = {
     </GenericSection>
   ),
   illustrations: <IllustrationsSection />,
+  logos: <LogosSection />,
   voice: (
     <GenericSection title="Voice & Tone" category="Content Design">
       <div className="space-y-6">
