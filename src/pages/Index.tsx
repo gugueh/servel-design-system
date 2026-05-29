@@ -19,6 +19,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toast } from "@/components/ui/use-toast";
 import { Copy, Download, MoreHorizontal, Star } from "lucide-react";
 import licencesThirdPartyUrl from "@/LICENCES-THIRD-PARTY.txt?url";
+import servelEmailsZipUrl from "@/servel-emails.zip?url";
 
 const illustrationModules = import.meta.glob("../Ilustraciones/*.svg", { eager: true }) as Record<string, { default: string }>;
 const logoModules = import.meta.glob("../Logos/*.{svg,png}", { eager: true }) as Record<string, { default: string }>;
@@ -517,6 +518,34 @@ const LogosSection = () => (
   </GenericSection>
 );
 
+const emailsStatusBody = `Actualmente el sistema de emails de Servel ya cuenta con una base técnica moderna y perfectamente válida para producción en una startup early-stage. La arquitectura está construida utilizando React Email para la generación de templates, Nodemailer como cliente SMTP y una integración desacoplada dentro de Next.js, lo cual permite mantener el sistema modular, reutilizable y fácil de escalar a futuro.
+
+A nivel visual y estructural, ya se resolvió el uso de componentes reutilizables, un sistema de tema centralizado, soporte responsive y adaptación para dark mode. Esto permite mantener coherencia visual entre todos los emails de la plataforma y facilita futuros cambios de branding, diseño o experiencia de usuario sin necesidad de modificar múltiples templates manualmente.
+
+También se incorporó protección básica para el sistema OTP mediante rate limiting utilizando rate-limiter-flexible , lo cual es importante para evitar abuso, spam o ataques automatizados sobre los endpoints de autenticación.
+
+En términos de infraestructura, el siguiente paso importante es la configuración correcta del dominio y autenticación DNS para mejorar la reputación de envío y evitar que los correos terminen en spam. Para esto se utilizará Cloudflare como proveedor DNS principal.
+
+Cloudflare no enviará emails por sí mismo, sino que actuará como capa de administración DNS y seguridad para el dominio de Servel. Dentro de Cloudflare se deberán configurar correctamente los registros SPF, DKIM y DMARC proporcionados por el proveedor SMTP elegido (por ejemplo Brevo). Estos registros son fundamentales para que servicios como Gmail, Outlook o Yahoo puedan verificar que los correos enviados desde Servel son legítimos.
+
+El registro SPF define qué servidores están autorizados a enviar emails en nombre del dominio. Sin este registro, muchos proveedores consideran los correos sospechosos. El registro DKIM agrega una firma criptográfica a cada email enviado, permitiendo verificar que el contenido no fue alterado y que realmente proviene de Servel. Finalmente, DMARC define la política de validación y comportamiento frente a correos sospechosos, ayudando a prevenir spoofing y ataques de phishing.
+
+Una vez configurados estos registros en Cloudflare, la deliverability del sistema mejora considerablemente y el dominio comienza a construir reputación positiva con los distintos proveedores de correo.
+
+Además de los registros DNS, también se recomienda separar el subdominio de emails transaccionales del dominio principal de la aplicación. En lugar de enviar emails desde @servel.com , la recomendación es utilizar un subdominio dedicado como mail.servel.com . Esto permite aislar la reputación de envío y mantener separadas las responsabilidades entre la web principal y el sistema de correos.
+
+Actualmente el sistema todavía opera de manera síncrona, es decir, cuando se genera un email, la API espera a que el proveedor SMTP complete el envío antes de responder. Para la etapa actual del proyecto esto es totalmente aceptable y evita complejidad innecesaria. Sin embargo, a medida que aumente el tráfico de usuarios, será recomendable incorporar un sistema de colas (queue system) utilizando herramientas como BullMQ y Redis. Esto permitiría desacoplar completamente el envío de emails del ciclo principal de requests HTTP y mejorar resiliencia, rendimiento y tolerancia a fallos.
+
+Mientras tanto, ya se incorporó un mecanismo básico de retry automático para reintentar envíos en caso de fallos temporales del proveedor SMTP. Esto es suficiente para una primera etapa y evita depender de infraestructura más compleja antes de tiempo.
+
+Otro aspecto importante pendiente es la observabilidad del sistema. Actualmente el logging puede resolverse utilizando logs estructurados simples mediante console.log  y console.error , registrando eventos relevantes como envíos exitosos, errores SMTP o rechazos por rate limiting. Más adelante, cuando exista mayor volumen de usuarios o necesidad de debugging avanzado, se puede integrar una plataforma como Sentry para centralizar errores y monitoreo.
+
+Respecto al proveedor SMTP, la decisión actual es mantener una solución gratuita o freemium mientras el producto valida usuarios reales y crecimiento inicial. En este contexto, Brevo representa una muy buena alternativa porque ofrece SMTP, soporte para SPF/DKIM y una cuota gratuita suficiente para etapas tempranas. La arquitectura implementada ya está preparada para migrar fácilmente a servicios más avanzados como Postmark o Mailgun en el futuro sin necesidad de reestructurar el sistema.
+
+A nivel frontend y experiencia de desarrollo, ya se encuentra implementado el sistema de preview local para emails dentro de Next.js. Esto permite renderizar templates directamente en el navegador durante desarrollo, agilizando iteración visual y testing responsive sin necesidad de enviar emails reales constantemente. Esta práctica es ampliamente utilizada en startups modernas porque mejora muchísimo la velocidad de desarrollo y reduce errores visuales.
+
+El sistema actual ya cumple correctamente con los requisitos necesarios para operar en producción. La arquitectura es moderna, reusable, responsive y mantenible. Las prioridades inmediatas restantes se centran principalmente en la configuración DNS dentro de Cloudflare, la validación del dominio SMTP, el fortalecimiento gradual de observabilidad y, más adelante, la incorporación de colas de procesamiento cuando el tráfico real del producto lo justifique.`;
+
 const sectionContent: Record<string, React.ReactNode> = {
   welcome: <WelcomeSection />,
   nosotros: <AboutSection />,
@@ -543,6 +572,25 @@ const sectionContent: Record<string, React.ReactNode> = {
             <p className="text-sm text-muted-foreground">{faq.a}</p>
           </div>
         ))}
+      </div>
+    </GenericSection>
+  ),
+  emails: (
+    <GenericSection title="Emails" category="Getting Started">
+      <div className="space-y-6">
+        <div className="max-w-3xl space-y-4">
+          <h2 className="font-display text-lg">Estado actual y próximos pasos del sistema de emails de Servel</h2>
+          <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{emailsStatusBody}</div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button asChild variant="secondary">
+            <a href={servelEmailsZipUrl} download="servel-emails.zip">
+              <Download className="h-4 w-4" />
+              Descargar servel-emails.zip
+            </a>
+          </Button>
+        </div>
       </div>
     </GenericSection>
   ),
