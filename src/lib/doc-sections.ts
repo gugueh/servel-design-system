@@ -8,6 +8,7 @@ import {
   Image,
   Layers,
   LayoutGrid,
+  Mail,
   Move,
   Palette,
   PenTool,
@@ -22,6 +23,7 @@ export const docSectionGroups = [
       { id: "welcome", label: "Welcome", icon: BookOpen },
       { id: "nosotros", label: "Nosotros", icon: Users },
       { id: "faqs", label: "FAQs", icon: FileText },
+      { id: "emails", label: "Emails", icon: Mail },
     ],
   },
   {
