@@ -1,27 +1,6 @@
 # Servel Design System
 
-Sitio de documentación y playground del **Design System de Servel**: una referencia visual y técnica de tokens, tipografías, colores, espaciados, elevación, motion, ilustraciones, logos y componentes.
-
-Construido con **React 18 + TypeScript + Vite + Tailwind CSS** sobre la base de [shadcn/ui](https://ui.shadcn.com/) y la tipografía [Switzer](https://www.fontsquirrel.com/fonts/switzer).
-
----
-
-## Stack
-
-- **Framework:** React 18 + TypeScript + Vite 5
-- **Estilos:** Tailwind CSS 3 + tailwindcss-animate
-- **UI base:** shadcn/ui (Radix UI primitives)
-- **Routing:** React Router 6
-- **Estado servidor:** TanStack Query 5
-- **Animaciones:** Framer Motion 12
-- **Iconos:** Lucide React + SVGs propios
-- **Tipografía:** Switzer (Fontshare)
-- **Tema:** next-themes (light/dark)
-- **Tests:** Vitest + Testing Library
-- **E2E:** Playwright
-- **Linter:** ESLint 9 (flat config)
-
----
+Sitio de documentación y playground del **Design System de Servel**: una referencia visual y técnica de tokens, tipografías, colores, espaciados, elevación, motion, ilustraciones, logos y componentes. Todos los derechos reservados.
 
 ## Quick start
 
