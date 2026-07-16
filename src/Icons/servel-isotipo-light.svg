@@ -1,0 +1,48 @@
+<svg width="187" height="288" viewBox="0 0 187 288" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_1597_19770)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M85.9591 57.8203C109.671 57.8203 128.027 62.8717 140.82 72.8565L117.64 121.762C119.488 110.665 104.175 101.153 85.6946 101.153C69.3262 101.153 57.1825 104.852 57.1825 116.477C57.1825 120.703 59.5177 123.524 63.9124 125.718C49.9261 126.481 24.3413 122.042 16 98.2869C25.2298 72.6042 50.1347 57.8203 85.9591 57.8203Z" fill="url(#paint0_linear_1597_19770)"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.9831 98.2276C24.3254 121.982 49.9129 126.418 63.8984 125.654C73.5206 130.457 93.0125 132.247 119.473 139.14C134.854 143.182 149.959 148.965 159.788 160.741C160.552 186.768 137.337 212.449 123.159 212.449L119.613 212.216C123.365 209.364 125.545 205.88 125.545 202.025C125.545 188.285 108.912 186.17 74.3277 179.565C44.7587 174.016 12.022 163.448 12.022 122.493C12.022 113.594 13.3782 105.477 15.9831 98.2276Z" fill="url(#paint1_linear_1597_19770)"/>
+<g filter="url(#filter1_d_1597_19770)">
+<path d="M159.793 160.741C166.665 168.974 170.96 180.136 170.96 195.683C170.96 248.264 127.662 263.589 85.4206 263.589C70.1288 263.589 40.6936 260.116 24.1228 236.375L52.6828 192.776C52.6828 210.744 65.0916 219.993 90.4361 219.993C102.665 219.993 113.342 216.989 119.618 212.216L123.164 212.449C137.341 212.449 160.557 186.769 159.793 160.741Z" fill="url(#paint2_linear_1597_19770)"/>
+</g>
+<path d="M86.2103 44.6085C73.3476 44.6085 62.9204 34.6225 62.9204 22.3043C62.9204 9.98595 73.3476 0 86.2103 0C99.073 0 109.5 9.98595 109.5 22.3043C109.5 34.6225 99.073 44.6085 86.2103 44.6085Z" fill="url(#paint3_radial_1597_19770)"/>
+<defs>
+<filter id="filter0_d_1597_19770" x="0" y="45.8203" width="156.82" height="99.9767" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1597_19770"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1597_19770" result="shape"/>
+</filter>
+<filter id="filter1_d_1597_19770" x="8.1228" y="152.741" width="178.837" height="134.847" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="8"/>
+<feGaussianBlur stdDeviation="8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1597_19770"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1597_19770" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_1597_19770" x1="136.201" y1="73.5309" x2="40.5036" y2="109.632" gradientUnits="userSpaceOnUse">
+<stop offset="0.0894866" stop-color="#D5E4FA"/>
+<stop offset="1" stop-color="#2268E9"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1597_19770" x1="40.5876" y1="121.914" x2="148.358" y2="195.947" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DEEBFB"/>
+<stop offset="1" stop-color="#01BEC8"/>
+</linearGradient>
+<linearGradient id="paint2_linear_1597_19770" x1="142.287" y1="175.207" x2="39.8538" y2="212.112" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FAFAFA"/>
+<stop offset="1" stop-color="#64DE7E"/>
+</linearGradient>
+<radialGradient id="paint3_radial_1597_19770" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(86.2103 22.3043) rotate(90) scale(22.3043 23.2899)">
+<stop stop-color="#FAFAFA"/>
+<stop offset="1" stop-color="#E5EEFB"/>
+</radialGradient>
+</defs>
+</svg>
