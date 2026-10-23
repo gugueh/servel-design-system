@@ -11,7 +11,7 @@
   <g id="left-hand" transform="rotate(-14 0 320)">
     <path d="M-200 444.328746L82.8252 207.763L52.853 180.543C46.2773 174.426 45.3596 164.333 50.8644 157.146C56.9819 149.194 68.4511 147.97 76.0963 154.392L92.154 168.003L177.025 157.605L181.919 198.893C180.237 207.151 177.485 215.103 173.508 222.443C169.532 229.936 164.18 236.665 158.063 242.476L-200 549.735016Z" fill="white" stroke="black" stroke-width="1.108" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M150.876 179.626L141.394 102.859C140.476 94.9061 145.982 87.7204 153.934 86.6482C161.885 85.7305 169.072 91.2367 170.143 99.1882L179.319 177.332" fill="white">
-      <animate attributeName="fill" values="white;white;black;black;white;white;white" keyTimes="0;0.0862745098039;0.0949019607843;0.120784313725;0.129411764706;0.21568627451;1" dur="10.2s" repeatCount="indefinite" calcMode="linear" fill="freeze" />
+      <animate attributeName="fill" values="white;white;#DCE3ED;white;white" keyTimes="0;0.0705882352941;0.078431372549;0.0960784313725;1" dur="10.2s" repeatCount="indefinite" calcMode="linear" fill="freeze" />
     </path>
     <path d="M150.876 179.626L141.394 102.859C140.476 94.9061 145.982 87.7204 153.934 86.6482C161.885 85.7305 169.072 91.2367 170.143 99.1882L179.319 177.332" stroke="black" stroke-width="1.108" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M134.512 170.144L124.42 88.1772C123.349 79.7675 129.466 71.9678 137.876 70.8969C146.287 69.8274 154.085 75.9435 155.156 84.3546L165.25 166.321" fill="white" />
@@ -27,9 +27,9 @@
     <path d="M39.3012 241.257C32.3304 234.285 31.7556 223.394 38.177 216.972C40.8517 214.297 44.3874 212.774 48.0517 212.507V212.506C53.1086 212.085 58.4005 214.034 62.4624 218.095L115.745 271.378C122.717 278.35 123.292 289.243 116.87 295.665C110.448 302.087 99.5553 301.511 92.5842 294.54L39.3012 241.257Z" fill="#7CA1F3" stroke="black" stroke-width="1.108" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
     <g id="contact-shadow" opacity="0">
       <path d="M173.355 220.914L132.372 182.683C125.796 176.567 124.879 166.473 130.384 159.286C136.501 151.333 147.97 150.111 155.615 156.533L171.673 170.144L209.445 131.148L173.355 220.914Z" fill="black" stroke="black" stroke-width="1.108" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-      <animate attributeName="opacity" values="0;0;1;1;0;0;0" keyTimes="0;0.0862745098039;0.0949019607843;0.120784313725;0.129411764706;0.21568627451;1" dur="10.2s" repeatCount="indefinite" calcMode="linear" fill="freeze" />
+      <animate attributeName="opacity" values="0;0;0.16;0;0" keyTimes="0;0.0705882352941;0.078431372549;0.103921568627;1" dur="10.2s" repeatCount="indefinite" calcMode="linear" fill="freeze" />
     </g>
-    <animateTransform attributeName="transform" type="rotate" dur="10.2s" values="-14 0 320;-14 0 320;-9 0 320;0 0 320;0 0 320;-9 0 320;-14 0 320;-14 0 320;-14 0 320" keyTimes="0;0.0345098039216;0.0647058823529;0.0949019607843;0.120784313725;0.155294117647;0.189803921569;0.21568627451;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0 0 1 1" repeatCount="indefinite" fill="freeze" />
+    <animateTransform attributeName="transform" type="rotate" dur="10.2s" values="-14 0 320;-15.2 0 320;0 0 320;-14 0 320;-14 0 320" keyTimes="0;0.0176470588235;0.078431372549;0.21568627451;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.8 0.65;0.16 0.55 0.35 1;0 0 1 1" repeatCount="indefinite" fill="freeze" />
   </g>
   <g id="right-hand" transform="rotate(14 370 301)">
     <path d="M369.403 259.909L263.733 166.78L212.352 121.514L177.638 166.473L161.582 152.864C153.935 146.441 142.466 147.664 136.348 155.615C130.844 162.804 131.761 172.896 138.337 179.013L269.238 301.198L369.25 300.892V259.909H369.403Z" fill="white" stroke="black" stroke-width="1.108" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
@@ -47,10 +47,10 @@
     <circle cx="257.841" cy="219.974" r="32.74" fill="#99E5E9" stroke="black" stroke-width="2" />
     <path d="M257.554 219.554V243.014" stroke="black" stroke-width="3" stroke-linecap="round" />
     <path d="M257.554 219.554H281.014" stroke="black" stroke-width="3" stroke-linecap="round" />
-    <animateTransform attributeName="transform" type="rotate" dur="10.2s" values="14 370 301;14 370 301;9 370 301;0 370 301;0 370 301;9 370 301;14 370 301;14 370 301;14 370 301" keyTimes="0;0.0345098039216;0.0647058823529;0.0949019607843;0.120784313725;0.155294117647;0.189803921569;0.21568627451;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0 0 1 1" repeatCount="indefinite" fill="freeze" />
+    <animateTransform attributeName="transform" type="rotate" dur="10.2s" values="14 370 301;15.2 370 301;0 370 301;14 370 301;14 370 301" keyTimes="0;0.0176470588235;0.078431372549;0.21568627451;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.8 0.65;0.16 0.55 0.35 1;0 0 1 1" repeatCount="indefinite" fill="freeze" />
   </g>
   <g id="impact-rays" opacity="0">
     <path d="M114.022 30.2201L136.503 51.0167M160.052 0.554199L163.264 42.9133M196.141 43.6764L211.433 23.7975" stroke="#00BEC8" stroke-width="1.108" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-    <animate attributeName="opacity" values="0;0;1;1;0;0;0" keyTimes="0;0.0862745098039;0.0949019607843;0.120784313725;0.129411764706;0.21568627451;1" dur="10.2s" repeatCount="indefinite" calcMode="linear" fill="freeze" />
+    <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.0705882352941;0.078431372549;0.103921568627;1" dur="10.2s" repeatCount="indefinite" calcMode="linear" fill="freeze" />
   </g>
 </svg>
