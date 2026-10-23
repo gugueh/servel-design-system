@@ -26,3 +26,7 @@ https://developer.android.com/develop/ui/views/launch/splash-screen
 https://pub.dev/packages/webview_flutter
 
 Validación: reproducción web y compilación del design system. Los ejemplos móviles deben verificarse en el proyecto y dispositivos de destino.
+
+## Tarjeta del especialista
+
+specialist-card.html incluye la demostración de primera visita y el giro interactivo (460 ms). Tocá la tarjeta o Servicios / Reseñas para cambiar de cara. La demostración vuelve al frente y se detiene; una interacción manual la cancela. Con movimiento reducido, el cambio de cara es inmediato. El HTML incluye sus fuentes y su imagen y funciona sin conexión. Los datos son de muestra: vinculalos al perfil real de tu app.

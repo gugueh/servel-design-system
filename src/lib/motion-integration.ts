@@ -1,7 +1,7 @@
 export type MotionAsset = {
   id: string;
   title: string;
-  kind: "splash" | "illustration";
+  kind: "splash" | "illustration" | "interaction";
   entry?: "v1" | "v3";
   exit?: "a" | "b" | "c";
   width: number;
@@ -17,7 +17,7 @@ export const motionUrl = (file: string) => `${import.meta.env.BASE_URL}motion/${
 export function kotlinExample(asset: MotionAsset) {
   return `// Dependencias: Compose UI + AndroidX WebKit (androidx.webkit:webkit).
 // Guardá ${asset.id}.html en app/src/main/assets/motion/.
-// Uso: ServelMotion("${asset.id}.html", Modifier.fillMaxSize()) { /* abrir destino */ }
+// Uso: ServelMotion("${asset.id}.html", Modifier.fillMaxSize()) { ${asset.kind === "interaction" ? "/* demostración terminada: conservar el perfil */" : "/* abrir destino */"} }
 package com.servel.motion
 
 import android.animation.ValueAnimator
@@ -106,7 +106,7 @@ export function flutterExample(asset: MotionAsset) {
 // flutter:
 //   assets:
 //     - assets/motion/
-// Uso: ServelMotion(asset: 'assets/motion/${asset.id}.html', onFinished: () { /* abrir destino */ })
+// Uso: ServelMotion(asset: 'assets/motion/${asset.id}.html', onFinished: () { ${asset.kind === "interaction" ? "/* demostración terminada: conservar el perfil */" : "/* abrir destino */"} })
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
