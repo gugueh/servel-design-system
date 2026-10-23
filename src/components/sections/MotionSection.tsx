@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import MotionFoundations from "./MotionFoundations";
+import SpecialistCardMotion from "./SpecialistCardMotion";
 import { flutterExample, kotlinExample, motionUrl, type MotionAsset } from "@/lib/motion-integration";
 
 const splashVersions = [
@@ -195,6 +196,7 @@ export default function MotionSection() {
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="mb-8" aria-label="Contenido de Motion"><TabsTrigger value="library">Biblioteca</TabsTrigger><TabsTrigger value="integration">Kotlin / Flutter</TabsTrigger><TabsTrigger value="foundations">Fundamentos</TabsTrigger></TabsList>
         <TabsContent value="library" className="space-y-12">
+          <SpecialistCardMotion />
           {error ? <div role="alert" className="space-y-3 rounded-xl border border-border p-6"><p>No se pudo cargar la biblioteca.</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Reintentar</Button></div> : assets.length === 0 ? <p role="status" className="text-sm text-muted-foreground">Cargando animaciones…</p> : <>
             <section className="space-y-8" aria-labelledby="splash-heading">
               <div><h2 id="splash-heading" className="font-display text-lg">Splashes</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Cada versión incluye la entrada y la salida en una sola animación.</p></div>
