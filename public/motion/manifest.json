@@ -276,5 +276,16 @@
     "movement": 2.2,
     "pause": 8,
     "figma": "28:4653"
+  },
+  {
+    "id": "specialist-card",
+    "title": "Tarjeta del especialista",
+    "kind": "interaction",
+    "width": 393,
+    "height": 580,
+    "duration": 2.5,
+    "movement": 2.5,
+    "pause": 0,
+    "figma": ""
   }
 ]

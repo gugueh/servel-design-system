@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Copy, Download, Pause, Play } from "lucide-react";
+import { Copy, Download, ExternalLink, Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -31,6 +31,7 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       if (event.origin !== window.location.origin || event.source !== iframe.current?.contentWindow || event.data?.source !== "servel-motion") return;
+      if (event.data.manual) hoverPlayback.current = false;
       setPlaying(Boolean(event.data.playing));
       setTime(Number(event.data.time) || 0);
       setReady(true);
@@ -60,7 +61,7 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
         }
       }}
     >
-      <div className={`flex items-center justify-center bg-muted/35 px-4 py-6 ${asset.kind === "splash" ? "min-h-72" : "h-[360px]"}`}>
+      <div className={`flex items-center justify-center bg-muted/35 px-4 py-6 ${asset.kind === "splash" ? "min-h-72" : asset.kind === "interaction" ? "h-[580px]" : "h-[360px]"}`}>
         <div
           className={`relative w-full overflow-hidden ${asset.kind === "splash" ? "max-w-[200px] rounded-[24px] border border-border bg-white shadow-elevation-1" : "h-full max-w-[340px] rounded-lg"}`}
           style={asset.kind === "splash" ? { aspectRatio: `${asset.width} / ${asset.height}` } : undefined}
@@ -76,13 +77,13 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
               ref={iframe}
               src={motionUrl(`${asset.id}.html?autoplay=0`)}
               title={`Animación: ${asset.title}`}
-              className="pointer-events-none absolute inset-0 h-full w-full border-0"
-              tabIndex={-1}
+              className={`${asset.kind === "interaction" ? "pointer-events-auto" : "pointer-events-none"} absolute inset-0 h-full w-full border-0`}
+              tabIndex={asset.kind === "interaction" ? 0 : -1}
               sandbox="allow-scripts allow-same-origin"
               loading="lazy"
               onLoad={() => {
                 setReady(true);
-                send("loop", true);
+                send("loop", asset.kind !== "interaction");
                 if (hovered.current && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                   hoverPlayback.current = true;
                   send("restart");
@@ -95,9 +96,9 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
       </div>
       <div className="space-y-4 p-4">
         <div>
-          <h3 className="text-sm font-semibold">{asset.title}</h3>
+          <h3 className="text-sm font-semibold">{asset.kind === "interaction" ? <a className="inline-flex items-center gap-2 hover:underline" href={motionUrl(`${asset.id}.html`)} target="_blank" rel="noreferrer" aria-label={`Abrir ${asset.title}`} title="Abrir la demostración"><span>{asset.title}</span><ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></a> : asset.title}</h3>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            {asset.kind === "splash" ? "Entrada + reposo + salida · 5 s" : `${formatSeconds(asset.movement)} de movimiento + 8 s de pausa`}
+            {asset.kind === "splash" ? "Entrada + reposo + salida · 5 s" : asset.kind === "interaction" ? "Giro de 460 ms · tocá la tarjeta o elegí Reseñas" : `${formatSeconds(asset.movement)} de movimiento + 8 s de pausa`}
           </p>
         </div>
         <div className="flex items-center gap-1 border-t border-border pt-3">
@@ -105,7 +106,7 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
             {playing ? <Pause /> : <Play />}
           </Button>
           <Button size="sm" variant="ghost" className="h-8 px-1.5 text-xs" onClick={() => onUse(asset)}>Usar en app</Button>
-          <Button size="sm" variant="ghost" className="h-8 px-1.5 text-xs" asChild><a href={motionUrl(`${asset.id}.svg`)} download aria-label={`Descargar SVG de ${asset.title}`}><Download /> SVG</a></Button>
+          <Button size="sm" variant="ghost" className="h-8 px-1.5 text-xs" asChild><a href={motionUrl(`${asset.id}.${asset.kind === "interaction" ? "html" : "svg"}`)} download aria-label={`Descargar ${asset.kind === "interaction" ? "HTML" : "SVG"} de ${asset.title}`}><Download /> {asset.kind === "interaction" ? "HTML" : "SVG"}</a></Button>
         </div>
       </div>
     </article>
@@ -131,7 +132,7 @@ function Integration({ assets, selected, onSelect }: { assets: MotionAsset[]; se
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-lg">Llevar una animación a tu app</h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Cada archivo reúne el dibujo y la animación vectorial para reproducirlos con un WebView local, sin conexión.</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Cada archivo reúne el diseño y la animación para reproducirlos con un WebView local, sin conexión.</p>
       </div>
       <div className="space-y-2">
         <label className="text-sm font-medium" id="motion-asset-label">Animación</label>
@@ -155,6 +156,7 @@ function Integration({ assets, selected, onSelect }: { assets: MotionAsset[]; se
       </Tabs>
       <div className="space-y-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
         <p><strong className="text-foreground">Entrada y salida juntas.</strong> El splash se reproduce una vez. Al terminar la salida envía <code>completed</code>; usá ese evento para mostrar la Home, el registro o el destino que corresponda. La Home de las muestras es solo una referencia; los 5 s incluyen ese reposo final.</p>
+        <p><strong className="text-foreground">Tarjeta del especialista.</strong> La demostración inicial gira una vez y vuelve al frente. Después, tocar la tarjeta, Servicios o Reseñas cambia de cara. Usá este HTML como referencia de interacción; en una app real, conectá sus datos y acciones al perfil.</p>
         <p><strong className="text-foreground">Ilustraciones.</strong> Repiten el movimiento después de una pausa de ocho segundos. Podés pausarlas con <code>window.ServelMotion.pause()</code>.</p>
         <p><strong className="text-foreground">Movimiento reducido.</strong> El reproductor muestra una pose estática y permite continuar. Los ejemplos móviles trasladan esa preferencia al reproductor.</p>
         <p>En Android 12 o posterior, esta secuencia de marca va dentro de la aplicación, después del splash del sistema. No reemplaza la API SplashScreen.</p>
@@ -196,6 +198,10 @@ export default function MotionSection() {
         <TabsList className="mb-8" aria-label="Contenido de Motion"><TabsTrigger value="library">Biblioteca</TabsTrigger><TabsTrigger value="integration">Kotlin / Flutter</TabsTrigger><TabsTrigger value="foundations">Fundamentos</TabsTrigger></TabsList>
         <TabsContent value="library" className="space-y-12">
           {error ? <div role="alert" className="space-y-3 rounded-xl border border-border p-6"><p>No se pudo cargar la biblioteca.</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Reintentar</Button></div> : assets.length === 0 ? <p role="status" className="text-sm text-muted-foreground">Cargando animaciones…</p> : <>
+            <section className="space-y-5" aria-labelledby="profile-motion-heading">
+              <div><h2 id="profile-motion-heading" className="font-display text-lg">Interacciones de perfiles</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Reproducí la demostración de primera visita o tocá la tarjeta para alternar entre servicios y reseñas. El título abre la vista completa.</p></div>
+              <div className="grid gap-4 sm:grid-cols-2">{assets.filter(a => a.kind === "interaction").map(a => <MotionPlayer key={a.id} asset={a} onUse={useAsset} />)}</div>
+            </section>
             <section className="space-y-8" aria-labelledby="splash-heading">
               <div><h2 id="splash-heading" className="font-display text-lg">Splashes</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Cada versión incluye la entrada y la salida en una sola animación.</p></div>
               {splashVersions.map((version, index) => (
