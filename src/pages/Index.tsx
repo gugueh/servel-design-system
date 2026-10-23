@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DocSidebar from "@/components/DocSidebar";
 import SectionNav from "@/components/SectionNav";
 import DocTopBar from "@/components/DocTopBar";
@@ -874,10 +874,28 @@ const sectionContent: Record<string, React.ReactNode> = {
 };
 
 const Index = () => {
-  const [activeSection, setActiveSection] = useState("welcome");
+  const [activeSection, setActiveSection] = useState(() => {
+    const section = window.location.hash.slice(1);
+    return Object.prototype.hasOwnProperty.call(sectionContent, section) ? section : "welcome";
+  });
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    const syncSection = () => {
+      const section = window.location.hash.slice(1);
+      setActiveSection(Object.prototype.hasOwnProperty.call(sectionContent, section) ? section : "welcome");
+      setMobileSidebarOpen(false);
+    };
+    window.addEventListener("hashchange", syncSection);
+    window.addEventListener("popstate", syncSection);
+    return () => {
+      window.removeEventListener("hashchange", syncSection);
+      window.removeEventListener("popstate", syncSection);
+    };
+  }, []);
+
   const handleNavigate = (section: string) => {
+    if (window.location.hash !== "#" + section) window.history.pushState(null, "", "#" + section);
     setActiveSection(section);
     setMobileSidebarOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
