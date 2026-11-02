@@ -6,7 +6,7 @@ Sitio de documentación y playground del **Design System de Servel**: una refere
 
 ```bash
 # 1. Clonar
-git clone https://github.com/Guguehh/servel-design-system.git
+git clone https://github.com/gugueh/servel-design-system.git
 cd servel-design-system
 
 # 2. Instalar dependencias
@@ -189,5 +189,5 @@ Este repositorio incluye assets de terceros. Revisá:
 
 ## Links
 
-- Repositorio: [github.com/Guguehh/servel-design-system](https://github.com/Guguehh/servel-design-system)
-- Issues: [github.com/Guguehh/servel-design-system/issues](https://github.com/Guguehh/servel-design-system/issues)
+- Repositorio: [github.com/gugueh/servel-design-system](https://github.com/gugueh/servel-design-system)
+- Issues: [github.com/gugueh/servel-design-system/issues](https://github.com/gugueh/servel-design-system/issues)
