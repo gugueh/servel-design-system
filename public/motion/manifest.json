@@ -15,21 +15,6 @@
     "variant": "04 · Original"
   },
   {
-    "id": "splash-v3-c-seda-ajustada",
-    "title": "Seda ajustada",
-    "kind": "splash",
-    "entry": "v3",
-    "exit": "c",
-    "width": 360,
-    "height": 800,
-    "duration": 5,
-    "movement": 3.36,
-    "pause": 0,
-    "figma": "61:7456",
-    "edition": "original",
-    "variant": "04 · Original"
-  },
-  {
     "id": "splash-v3-c-original",
     "title": "Original",
     "kind": "splash",
@@ -100,21 +85,6 @@
     "movement": 3.78,
     "pause": 0,
     "figma": "129:141",
-    "edition": "smooth",
-    "variant": "04 · Mejorada / más suave"
-  },
-  {
-    "id": "splash-v3-c-smooth-seda-ajustada",
-    "title": "Seda ajustada",
-    "kind": "splash",
-    "entry": "v3",
-    "exit": "c",
-    "width": 360,
-    "height": 800,
-    "duration": 5,
-    "movement": 3.78,
-    "pause": 0,
-    "figma": "129:461",
     "edition": "smooth",
     "variant": "04 · Mejorada / más suave"
   },
