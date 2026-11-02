@@ -225,5 +225,15 @@
     "movement": 3.6,
     "pause": 8,
     "figma": ""
+  },
+  {
+    "id": "emergency-accepted",
+    "title": "Emergencia aceptada",
+    "kind": "illustration",
+    "width": 560,
+    "height": 420,
+    "duration": 12,
+    "movement": 4.08,
+    "pause": 7.92
   }
 ]
