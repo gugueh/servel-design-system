@@ -9,12 +9,8 @@ import SpecialistCardMotion from "./SpecialistCardMotion";
 import { flutterExample, kotlinExample, motionUrl, type MotionAsset } from "@/lib/motion-integration";
 
 const splashVersions = [
-  { entry: "v1", exit: "c", label: "Aparición por piezas y encuentro del punto" },
-  { entry: "v1", exit: "a", label: "Aparición por piezas y salida suave" },
-  { entry: "v1", exit: "b", label: "Aparición por piezas y recorrido de la S" },
-  { entry: "v3", exit: "c", label: "Trazo continuo y encuentro del punto" },
-  { entry: "v3", exit: "a", label: "Trazo continuo y salida suave" },
-  { entry: "v3", exit: "b", label: "Trazo continuo y recorrido de la S" },
+  { number: "04", edition: "original", entry: "v3", exit: "c", label: "Trazo continuo y encuentro del punto · Original" },
+  { number: "04", edition: "smooth", entry: "v3", exit: "c", label: "Trazo continuo y encuentro del punto · Más suave" },
 ] as const;
 const formatSeconds = (value: number) => `${value.toLocaleString("es", { maximumFractionDigits: 1 })} s`;
 
@@ -47,17 +43,19 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
       onPointerEnter={event => {
         if (event.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         hovered.current = true;
-        if (ready && !failed && !playing) {
+        if (ready && !failed && !playing && !(asset.playback === "once" && time >= asset.duration - 0.01)) {
           hoverPlayback.current = true;
-          send("restart");
+          send(asset.playback === "once" ? "play" : "restart");
         }
       }}
       onPointerLeave={() => {
         hovered.current = false;
         if (hoverPlayback.current) {
           hoverPlayback.current = false;
-          send("pause");
-          send("seek", asset.kind === "splash" ? 1.8 : 0);
+          if (asset.playback !== "once") {
+            send("pause");
+            send("seek", asset.kind === "splash" ? 1.8 : 0);
+          }
         }
       }}
     >
@@ -83,10 +81,10 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
               loading="lazy"
               onLoad={() => {
                 setReady(true);
-                send("loop", true);
+                send("loop", asset.playback !== "once");
                 if (hovered.current && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                   hoverPlayback.current = true;
-                  send("restart");
+                  send(asset.playback === "once" ? "play" : "restart");
                 }
               }}
               onError={() => setFailed(true)}
@@ -98,7 +96,7 @@ function MotionPlayer({ asset, onUse }: { asset: MotionAsset; onUse: (asset: Mot
         <div>
           <h3 className="text-sm font-semibold">{asset.title}</h3>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            {asset.kind === "splash" ? "Entrada + reposo + salida · 5 s" : `${formatSeconds(asset.movement)} de movimiento + 8 s de pausa`}
+            {asset.kind === "splash" ? "Entrada + reposo + salida · 5 s" : asset.playback === "once" ? `Una vez · ${formatSeconds(asset.duration)} · Pose final fija` : asset.pause === 0 ? asset.flashInterval ? `Movimiento continuo · Flash cada ${formatSeconds(asset.flashInterval)}` : `Movimiento continuo · Ciclo de ${formatSeconds(asset.duration)}` : `${formatSeconds(asset.movement)} de movimiento + ${formatSeconds(asset.pause)} de pausa`}
           </p>
         </div>
         <div className="flex items-center gap-1 border-t border-border pt-3">
@@ -136,7 +134,7 @@ function Integration({ assets, selected, onSelect }: { assets: MotionAsset[]; se
       </div>
       <div className="space-y-2">
         <label className="text-sm font-medium" id="motion-asset-label">Animación</label>
-        <Select value={asset.id} onValueChange={onSelect}><SelectTrigger aria-labelledby="motion-asset-label"><SelectValue /></SelectTrigger><SelectContent>{assets.map(a => <SelectItem key={a.id} value={a.id}>{a.kind === "splash" ? `${a.title} · ${a.entry?.toUpperCase()} + ${a.exit?.toUpperCase()}` : a.title}</SelectItem>)}</SelectContent></Select>
+        <Select value={asset.id} onValueChange={onSelect}><SelectTrigger aria-labelledby="motion-asset-label"><SelectValue /></SelectTrigger><SelectContent>{assets.map(a => <SelectItem key={a.id} value={a.id}>{a.kind === "splash" ? `${a.title} · ${a.variant ?? `${a.entry?.toUpperCase()} + ${a.exit?.toUpperCase()}`}` : a.title}</SelectItem>)}</SelectContent></Select>
       </div>
       <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed">
         <li>Descargá el HTML de la animación. Incluye el dibujo y el reproductor.</li>
@@ -156,7 +154,7 @@ function Integration({ assets, selected, onSelect }: { assets: MotionAsset[]; se
       </Tabs>
       <div className="space-y-3 rounded-xl border border-border p-5 text-sm leading-relaxed text-muted-foreground">
         <p><strong className="text-foreground">Entrada y salida juntas.</strong> El splash se reproduce una vez. Al terminar la salida envía <code>completed</code>; usá ese evento para mostrar la Home, el registro o el destino que corresponda. La Home de las muestras es solo una referencia; los 5 s incluyen ese reposo final.</p>
-        <p><strong className="text-foreground">Ilustraciones.</strong> Repiten el movimiento después de una pausa de ocho segundos. Podés pausarlas con <code>window.ServelMotion.pause()</code>.</p>
+        <p><strong className="text-foreground">Ilustraciones.</strong> Cada ficha indica si el movimiento es continuo, incluye una pausa o se reproduce una sola vez. Podés pausarlas con <code>window.ServelMotion.pause()</code>.</p>
         <p><strong className="text-foreground">Movimiento reducido.</strong> El reproductor muestra una pose estática y permite continuar. Los ejemplos móviles trasladan esa preferencia al reproductor.</p>
         <p>En Android 12 o posterior, esta secuencia de marca va dentro de la aplicación, después del splash del sistema. No reemplaza la API SplashScreen.</p>
         <p>Integración mediante WebView, no Lottie ni AnimatedVectorDrawable. Los ejemplos deben verificarse en tu proyecto y dispositivos de destino.</p>
@@ -171,7 +169,7 @@ export default function MotionSection() {
   const [error, setError] = useState(false);
   const [retry, setRetry] = useState(0);
   const [tab, setTab] = useState("library");
-  const [selected, setSelected] = useState("splash-v1-c-perla");
+  const [selected, setSelected] = useState("splash-v3-c-perla");
   const integrationRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const controller = new AbortController();
@@ -200,14 +198,14 @@ export default function MotionSection() {
           {error ? <div role="alert" className="space-y-3 rounded-xl border border-border p-6"><p>No se pudo cargar la biblioteca.</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Reintentar</Button></div> : assets.length === 0 ? <p role="status" className="text-sm text-muted-foreground">Cargando animaciones…</p> : <>
             <section className="space-y-8" aria-labelledby="splash-heading">
               <div><h2 id="splash-heading" className="font-display text-lg">Splashes</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Cada versión incluye la entrada y la salida en una sola animación.</p></div>
-              {splashVersions.map((version, index) => (
-                <div key={`${version.entry}-${version.exit}`} className="space-y-4">
-                  <h3 className="text-sm font-medium"><span className="mr-2 text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>{version.label}</h3>
-                  <div className="grid gap-4 min-[540px]:grid-cols-2 lg:grid-cols-3">{assets.filter(a => a.kind === "splash" && a.entry === version.entry && a.exit === version.exit).map(a => <MotionPlayer key={a.id} asset={a} onUse={useAsset} />)}</div>
+              {splashVersions.map((version) => (
+                <div key={`${version.entry}-${version.exit}-${version.edition}`} className="space-y-4">
+                  <h3 className="text-sm font-medium"><span className="mr-2 text-muted-foreground">{version.number}</span>{version.label}</h3>
+                  <div className="grid gap-4 min-[540px]:grid-cols-2 lg:grid-cols-3">{assets.filter(a => a.kind === "splash" && a.entry === version.entry && a.exit === version.exit && (a.edition ?? "original") === version.edition).map(a => <MotionPlayer key={a.id} asset={a} onUse={useAsset} />)}</div>
                 </div>
               ))}
             </section>
-            <section className="space-y-5" aria-labelledby="illustration-heading"><div><h2 id="illustration-heading" className="font-display text-lg">Ilustraciones</h2><p className="mt-2 text-sm text-muted-foreground">Movimiento breve, regreso a la pose y ocho segundos de pausa antes de repetir.</p></div><div className="grid gap-4 sm:grid-cols-2">{assets.filter(a => a.kind === "illustration").map(a => <MotionPlayer key={a.id} asset={a} onUse={useAsset} />)}</div></section>
+            <section className="space-y-5" aria-labelledby="illustration-heading"><div><h2 id="illustration-heading" className="font-display text-lg">Ilustraciones</h2><p className="mt-2 text-sm text-muted-foreground">El ritmo de cada animación está indicado en su ficha.</p></div><div className="grid gap-4 sm:grid-cols-2">{assets.filter(a => a.kind === "illustration").map(a => <MotionPlayer key={a.id} asset={a} onUse={useAsset} />)}</div></section>
           </>}
         </TabsContent>
         <TabsContent value="integration"><div ref={integrationRef} className="scroll-mt-24">{assets.length > 0 ? <Integration assets={assets} selected={selected} onSelect={setSelected} /> : <p className="text-sm text-muted-foreground">Abrí la biblioteca para cargar las animaciones.</p>}</div></TabsContent>

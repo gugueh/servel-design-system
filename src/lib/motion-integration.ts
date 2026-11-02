@@ -4,11 +4,15 @@ export type MotionAsset = {
   kind: "splash" | "illustration";
   entry?: "v1" | "v3";
   exit?: "a" | "b" | "c";
+  edition?: "original" | "smooth";
+  variant?: string;
   width: number;
   height: number;
   duration: number;
   movement: number;
   pause: number;
+  flashInterval?: number;
+  playback?: "once" | "loop";
   figma: string;
 };
 
