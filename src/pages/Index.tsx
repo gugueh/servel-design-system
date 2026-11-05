@@ -24,6 +24,7 @@ import servelEmailsZipUrl from "@/servel-emails.zip?url";
 const illustrationModules = import.meta.glob("../Ilustraciones/*.svg", { eager: true }) as Record<string, { default: string }>;
 const logoModules = import.meta.glob("../Logos/*.{svg,png}", { eager: true }) as Record<string, { default: string }>;
 const iconModules = import.meta.glob("../Icons/*.svg", { eager: true }) as Record<string, { default: string }>;
+const backgroundModules = import.meta.glob("../Backgrounds/*.svg", { eager: true }) as Record<string, { default: string }>;
 
 const PNG_EXPORT_MAX_DIMENSION = 2048;
 const PNG_EXPORT_PIXEL_RATIO = 3;
@@ -518,6 +519,24 @@ const LogosSection = () => (
   </GenericSection>
 );
 
+const BackgroundsSection = () => (
+  <GenericSection title="Backgrounds" category="Expression">
+    <div className="space-y-8">
+      <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        Fondos para las pantallas de Servel. Las vistas previas conservan la proporción completa del original.
+        Cada tarjeta permite copiar el SVG o descargarlo en formato SVG y PNG.
+      </p>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        {Object.entries(backgroundModules).sort(([a], [b]) => a.localeCompare(b)).map(([path, mod]) => {
+          const fileName = path.split("/").pop()!;
+          return <IllustrationCard key={fileName} title={toTitleCase(fileName.replace(/\.svg$/i, ""))}
+            tag="Fondo SVG" url={mod.default} fileName={fileName} />;
+        })}
+      </div>
+    </div>
+  </GenericSection>
+);
+
 const emailsStatusBody = `Actualmente el sistema de emails de Servel ya cuenta con una base técnica moderna y perfectamente válida para producción en una startup early-stage. La arquitectura está construida utilizando React Email para la generación de templates, Nodemailer como cliente SMTP y una integración desacoplada dentro de Next.js, lo cual permite mantener el sistema modular, reutilizable y fácil de escalar a futuro.
 
 A nivel visual y estructural, ya se resolvió el uso de componentes reutilizables, un sistema de tema centralizado, soporte responsive y adaptación para dark mode. Esto permite mantener coherencia visual entre todos los emails de la plataforma y facilita futuros cambios de branding, diseño o experiencia de usuario sin necesidad de modificar múltiples templates manualmente.
@@ -758,6 +777,7 @@ const sectionContent: Record<string, React.ReactNode> = {
     </GenericSection>
   ),
   illustrations: <IllustrationsSection />,
+  backgrounds: <BackgroundsSection />,
   logos: <LogosSection />,
   voice: (
     <GenericSection title="Voice & Tone" category="Content Design">
