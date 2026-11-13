@@ -235,5 +235,16 @@
     "duration": 12,
     "movement": 4.08,
     "pause": 7.92
+  },
+  {
+    "id": "servicio-agendado",
+    "title": "Servicio agendado",
+    "kind": "illustration",
+    "width": 393,
+    "height": 295,
+    "duration": 1.2,
+    "movement": 1.2,
+    "pause": 0,
+    "playback": "once"
   }
 ]

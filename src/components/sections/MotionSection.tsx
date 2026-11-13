@@ -195,6 +195,25 @@ export default function MotionSection() {
         <TabsList className="mb-8" aria-label="Contenido de Motion"><TabsTrigger value="library">Biblioteca</TabsTrigger><TabsTrigger value="integration">Kotlin / Flutter</TabsTrigger><TabsTrigger value="foundations">Fundamentos</TabsTrigger></TabsList>
         <TabsContent value="library" className="space-y-12">
           <SpecialistCardMotion />
+          <article className="mt-5 overflow-hidden rounded-xl border border-border bg-card md:grid md:grid-cols-[minmax(250px,340px)_1fr]">
+            <div className="bg-muted/35">
+              <iframe
+                title="Prototipo de agendamiento del especialista"
+                src={motionUrl("flujo-agendamiento.html")}
+                className="h-[540px] w-full border-0"
+                sandbox="allow-scripts"
+                loading="lazy"
+              />
+            </div>
+            <div className="flex flex-col justify-center gap-4 p-6 md:p-8">
+              <h3 className="text-lg font-semibold">Agendar servicio</h3>
+              <p className="max-w-md text-sm text-muted-foreground">Toca «Agendar servicio» para ver cómo sube el fondo celeste, aparece la ilustración y la confirmación se contrae hacia «Próximo compromiso».</p>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="secondary" size="sm" asChild><a href={motionUrl("flujo-agendamiento.html")} target="_blank" rel="noreferrer">Abrir prototipo</a></Button>
+                <Button variant="ghost" size="sm" asChild><a href={motionUrl("flujo-agendamiento.html")} download><Download /> HTML</a></Button>
+              </div>
+            </div>
+          </article>
           {error ? <div role="alert" className="space-y-3 rounded-xl border border-border p-6"><p>No se pudo cargar la biblioteca.</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Reintentar</Button></div> : assets.length === 0 ? <p role="status" className="text-sm text-muted-foreground">Cargando animaciones…</p> : <>
             <section className="space-y-8" aria-labelledby="splash-heading">
               <div><h2 id="splash-heading" className="font-display text-lg">Splashes</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Cada versión incluye la entrada y la salida en una sola animación.</p></div>
