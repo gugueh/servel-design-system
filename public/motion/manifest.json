@@ -237,6 +237,30 @@
     "pause": 7.92
   },
   {
+    "id": "nueva-cuenta",
+    "title": "Nueva cuenta",
+    "kind": "illustration",
+    "width": 178,
+    "height": 176,
+    "duration": 1.4,
+    "movement": 1.4,
+    "pause": 0,
+    "figma": "",
+    "playback": "once"
+  },
+  {
+    "id": "email-illustration",
+    "title": "Ilustración de correo",
+    "kind": "illustration",
+    "width": 176,
+    "height": 176,
+    "duration": 1.15,
+    "movement": 1.15,
+    "pause": 0,
+    "figma": "",
+    "playback": "once"
+  },
+  {
     "id": "servicio-agendado",
     "title": "Servicio agendado",
     "kind": "illustration",

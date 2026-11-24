@@ -714,10 +714,13 @@ const sectionContent: Record<string, React.ReactNode> = {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {icons.map((icon) => (
-            <IconCard key={icon.fileName} icon={icon} />
-          ))}
+        <div className="space-y-4">
+          <h2 className="font-display text-lg font-semibold">Biblioteca</h2>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {icons.map((icon) => (
+              <IconCard key={icon.fileName} icon={icon} />
+            ))}
+          </div>
         </div>
 
         <div className="p-5 rounded-lg border border-border bg-card">
@@ -741,14 +744,17 @@ const sectionContent: Record<string, React.ReactNode> = {
           <h3 className="font-display text-sm mb-2">Créditos y Licencias</h3>
           <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
             <p>
-              Los iconos utilizados en este sistema de diseño forman parte de la librería <strong className="text-foreground">IconPark</strong>,
+              La biblioteca incluye iconos de <strong className="text-foreground">IconPark</strong>,
               desarrollada por <strong className="text-foreground">ByteDance</strong>.
             </p>
             <p>
-              Estos recursos se distribuyen bajo la <strong className="text-foreground">Apache License, Versión 2.0</strong>. Podés utilizar, modificar
+              Los recursos de IconPark se distribuyen bajo la <strong className="text-foreground">Apache License, Versión 2.0</strong>. Podés utilizar, modificar
               y distribuir estos iconos en proyectos comerciales y personales siempre que se respeten los términos de la licencia original.
             </p>
             <p>Copyright © 2023–2026 ByteDance Inc.</p>
+            <p>
+              Warning Triangle es un diseño original para Servel.
+            </p>
             <p>
               Consulta el texto completo de la licencia:{" "}
               <a
